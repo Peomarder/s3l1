@@ -67,7 +67,7 @@ struct Darr {
 	
 	string save() {
 		string a;
-	a.clear(); // Clear the string to avoid appending to previous contents
+	a.clear(); // Clear the string, just for fun tbh
 	for (size_t i = 0; i < size; ++i) {
 		a += data[i] + ","; // Append each element to the string, followed by a comma
 	}
@@ -92,86 +92,86 @@ DNode* tail;
 DoubleLinkedList() : head(nullptr), tail(nullptr) {}
 
 void addToHead(const string& value) {
-DNode* newNode = new DNode(value);
-if (!head) {
-head = tail = newNode;
-} else {
-newNode->next = head;
-head->prev = newNode;
-head = newNode;
-}
+	DNode* newNode = new DNode(value);
+	if (!head) {
+	head = tail = newNode;
+	} else {
+	newNode->next = head;
+	head->prev = newNode;
+	head = newNode;
+	}
 }
 
 void addToTail(const string& value) {
-DNode* newNode = new DNode(value);
-if (!tail) {
-head = tail = newNode;
-} else {
-newNode->prev = tail;
-tail->next = newNode;
-tail = newNode;
-}
+	DNode* newNode = new DNode(value);
+	if (!tail) {
+	head = tail = newNode;
+	} else {
+	newNode->prev = tail;
+	tail->next = newNode;
+	tail = newNode;
+	}
 }
 
 void removeFromHead() {
-if (!head) {
-throw runtime_error("No head!");
-return;
-}
-DNode* temp = head;
-head = head->next;
-if (head) {
-head->prev = nullptr;
-} else {
-tail = nullptr;
-}
+	if (!head) {
+		throw runtime_error("No head!");
+		return;
+	}
+	DNode* temp = head;
+	head = head->next;
+	if (head) {
+		head->prev = nullptr;
+	} else {
+		tail = nullptr;
+	}
 }
 
 void removeFromTail() {
-if (!tail) {
-throw runtime_error("No tail!");
-return;
-}
-DNode* temp = tail;
-tail = tail->prev;
-if (tail) {
-tail->next = nullptr;
-} else {
-head = nullptr;
-}
+	if (!tail) {
+		throw runtime_error("No tail!");
+		return;
+	}
+	DNode* temp = tail;
+	tail = tail->prev;
+	if (tail) {
+		tail->next = nullptr;
+	} else {
+		head = nullptr;
+	}
 }
 
 void removeByValue(const string& value) {
-DNode* current = head;
-while (current) {
-if (current->value == value) {
-if (current == head) {
-removeFromHead();
-} else if (current == tail) {
-removeFromTail();
-} else {
-current->prev->next = current->next;
-current->next->prev = current->prev;
-delete current; //idk icky
-}
-return;
-}
-current = current->next;
-}
-cout << "Value not found." << endl;
+	DNode* current = head;
+	while (current) {
+		if (current->value == value) {
+			if (current == head) {
+				removeFromHead();
+			} else if (current == tail) {
+				removeFromTail();
+			} else {
+				current->prev->next = current->next;
+				current->next->prev = current->prev;
+				delete current; //idk icky
+			}
+			return;
+			}
+			current = current->next;
+	}
+	cout << "Value not found." << endl;
 }
 
 int findVal(const string& value) {
-DNode* current = head;
-int i = 0;
-while (current) {
-if (current->value == value) {
-return i;
-}
-current = current->next;
-i++;
-}
-return -1;
+	DNode* current = head;
+	int i = 0;
+	while (current) {
+	if (current->value == value) {
+	return i;
+	}
+	current = current->next;
+	i++;
+	}
+	return -1;
 }
 
 	void print() {
@@ -478,7 +478,7 @@ struct CompleteBinaryTree {
 	void insert(string value) {
 	nodeCount++;
 	root = insertHelper(root, value, 1);
-	cout << "Whoopee! " << value << " has found its perch in our tree!" << endl;
+	cout << "value " << value << " added to the tree." << endl;
 	data.push(value);
 	}
 
@@ -571,7 +571,7 @@ return;
 file << ar.save()<< "\n" <<dr.save()<< "\n" <<qr.save()<< "\n" <<sr.save()<< "\n" <<hr.save()<< "\n" <<tr.save()<< "\n";
 
 file.close();
-cout << "Data saved to " << "data.txt" << " faster than a cheetah on roller skates!" << endl;
+cout << "Data saved to " << "data.txt" << "." << endl;
 }
 
 
@@ -583,7 +583,7 @@ string line;
 int structureIndex = 0;
 cout<<"2";
 if (!file.is_open()) {
-cout << "Great Scott! The file has disappeared into thin air!" << endl;
+cout << "no file..." << endl;
 return;
 }
 cout<<"3";
@@ -706,7 +706,7 @@ else if (command == "MDEL") {
 
 if (isstr >> index) {
 arrr.del(index);
-cout << "Element at index " << index << " vanished from the array!" << endl;
+cout << "Element at index " << index << " removed!" << endl;
 }
 }
 
@@ -714,7 +714,7 @@ else if (command == "MGET") {
 
 if (isstr >> index) {
 cout << "Got: " << arrr.get(index)<<endl;
-cout << "Element at index " << index << " retrieved faster than a squirrel finding its acorn!" << endl;
+cout << "Element at index " << index << " retrieved." << endl;
 }
 }
 
@@ -735,7 +735,7 @@ if (isstr >> position >> value) {
 		cout << "Invalid position for LPUSH." << endl;
 	}
 } else {
-	cout << "Invalid input for LPUSH. Keep calm and try again!" << endl;
+	cout << "Invalid input for LPUSH. " << endl;
 }
 }
 
@@ -872,7 +872,7 @@ else if (command == "PRINT") {
 	hsh.print();
 	cbt.print();
 // Implement print logic for all structures
-cout << "All data structures printed like a grand circus parade!" << endl;
+cout << "All data structures printed!" << endl;
 } 
 else if (command == "SAVE") {
 //saveToFile(filename);
@@ -881,9 +881,9 @@ else if (command == "LOAD") {
 //loadFromFile(filename);
 } 
 else if (command == "EXIT"||command == "QUIT") {
-cout << "Farewell, data structure enthusiast! May your algorithms always be efficient!" << endl;
+cout << "Farewell!" << endl;
 } else {
-cout << "Unknown command! Are you trying to invent a new circus act?" << endl;
+cout << "Unknown command!" << endl;
 }
 }
 catch(exception& e){
