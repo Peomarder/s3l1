@@ -1,0 +1,6 @@
+1,8,9,10,t.pop_back();
+d,c,b,a,2,d
+h3,y4,y5,y6,h3
+g9,g8,g7,g6,g5,h4,valueue
+ey,qw,3,p,3,q,3,i,3,1
+1,2,3,4,5,6,ABC
