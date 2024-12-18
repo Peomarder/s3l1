@@ -221,13 +221,12 @@ struct Queue {
 			back->next = newNode;
 			back = newNode;
 		}
-		cout << "Added " << value << " to back of the queue!" << endl;
 	}
 
-	void pop() { //dogshit
+	string pop() { //dogshit
 			if (front == nullptr) {
 				throw runtime_error("No queue!");
-				return;
+				return "";
 			}
 			string value = front->value;
 			Node* temp = front;
@@ -236,8 +235,8 @@ struct Queue {
 			if (front == nullptr) {
 				back = nullptr;
 			}
-			cout << "Removed " << temp->value << " from the queue!" << endl;
-			delete temp;
+			//delete temp;
+			return temp->value;
 		}
 
 	void print() {
@@ -256,17 +255,17 @@ struct Queue {
 		
 		string save() {
 			string q;
-    q.clear();
-    if (front == nullptr) {
-        q = "";
-        return q;
-    }
-    Node* current = front;
-    while (current!= nullptr) {
-        q += current->value + ",";
-        current = current->next;
-    }
-    q.pop_back(); // Remove the trailing comma
+	q.clear();
+	if (front == nullptr) {
+		q = "";
+		return q;
+	}
+	Node* current = front;
+	while (current!= nullptr) {
+		q += current->value + ",";
+		current = current->next;
+	}
+	q.pop_back(); // Remove the trailing comma
 	return q;
 	}
 
@@ -282,18 +281,17 @@ struct Stack {
 	void push(const string& value) {
 		Node* newNode = new Node{value, top};
 		top = newNode;
-		cout << "Added " << value << " to the top of the stack!" << endl;
 	}
 
-	void pop() {
+	string pop() {
 		if (top == nullptr) {
 			throw runtime_error("No stack!");
-			return;
+			return "";
 		}
 		Node* temp = top;
 		top = top->next;
-		cout << "Removed " << temp->value << " from the stack!" << endl;
-		delete temp;
+		//delete temp;
+		return temp->value;
 	}
 
 
@@ -390,7 +388,6 @@ struct HashTable {
 				cout << "Key already exists. Value updated!" << endl;
 			} else {
 				current->next = newBucket;
-				cout << "New key-value pair added to the bucket!" << endl;
 			}
 		}
 	}
@@ -423,7 +420,6 @@ struct HashTable {
 					buckets[index] = current->next;
 				}
 				delete current;
-				cout << "Key-value pair removed from the hash table!" << endl;
 				return;
 			}
 			prev = current;
@@ -448,15 +444,15 @@ struct HashTable {
 	
 	string save() {
 	string h;
-    h.clear();
-    for (size_t i = 0; i < HASHSIZE; ++i) {
-        Bucket* current = buckets[i];
-        while (current) {
-            h +=  current->value + "," + current->key + "," ;
-            current = current->next;
-        }
-    }
-    h.pop_back(); // Remove the trailing comma
+	h.clear();
+	for (size_t i = 0; i < HASHSIZE; ++i) {
+		Bucket* current = buckets[i];
+		while (current) {
+			h +=  current->value + "," + current->key + "," ;
+			current = current->next;
+		}
+	}
+	h.pop_back(); // Remove the trailing comma
 	return h;
 }
 	
@@ -478,7 +474,6 @@ struct CompleteBinaryTree {
 	void insert(string value) {
 	nodeCount++;
 	root = insertHelper(root, value, 1);
-	cout << "value " << value << " added to the tree." << endl;
 	data.push(value);
 	}
 
@@ -560,65 +555,60 @@ struct CompleteBinaryTree {
 };
 
 void saveToFile(const string& filename, Darr& ar, DoubleLinkedList& dr, Queue& qr, Stack& sr, HashTable& hr, CompleteBinaryTree& tr) {
-remove(filename.c_str());
-ofstream file(filename, ios::binary);
-if (!file.is_open()) {
-cout << "No file." << endl;
-return;
-}
+	remove(filename.c_str());
+	ofstream file(filename, ios::binary);
+	if (!file.is_open()) {
+	cout << "No file." << endl;
+	return;
+	}
 
-// Darr
-file << ar.save()<< "\n" <<dr.save()<< "\n" <<qr.save()<< "\n" <<sr.save()<< "\n" <<hr.save()<< "\n" <<tr.save()<< "\n";
+	// Darr
+	file << ar.save()<< "\n" <<dr.save()<< "\n" <<qr.save()<< "\n" <<sr.save()<< "\n" <<hr.save()<< "\n" <<tr.save()<< "\n";
 
-file.close();
-cout << "Data saved to " << "data.txt" << "." << endl;
+	file.close();
+	cout << "\n\nData saved to " << "data.txt" << "." << endl;
 }
 
 
 void loadFromFile(const string& filename, Darr& a, DoubleLinkedList& d, Queue& q, Stack& s, HashTable& h, CompleteBinaryTree& t) {
-try{
-	cout<<"1";
-ifstream file(filename);
-string line;
-int structureIndex = 0;
-cout<<"2";
-if (!file.is_open()) {
-cout << "no file..." << endl;
-return;
-}
-cout<<"3";
-while (getline(file, line) && structureIndex < 6) {
-istringstream ss(line);
-string value;
-string valuekey;
-cout<<"4";
-while (getline(ss, value, ',')) { //idk breaks here
-	
-cout<<"5";
-value.erase(0, value.find_first_not_of("     "));
-value.erase(value.find_last_not_of("     ") + 1);
-if (value==""){break;};
-switch(structureIndex) {
-	
-cout<<"6";
-case 0: a.push(value); break;
-case 1: d.addToTail(value); break;
-case 2: q.push(value); break;
-case 3: s.push(value); break;
-case 4: getline(ss, valuekey, ','); h.insert(valuekey,value); break; //needs key
-case 5: t.insert(value); break;
-}
-}
+	try{
+	ifstream file(filename);
+	string line;
+	int structureIndex = 0;
+	if (!file.is_open()) {
+		cout << "no file..." << endl;
+		return;
+	}
+	while (getline(file, line) && structureIndex < 6) {
+		istringstream ss(line);
+		string value;
+		string valuekey;
+		if (line.empty()) continue;
+		while (getline(ss, value, ',')) { //idk breaks here
+				
+			value.erase(0, value.find_first_not_of("	 "));
+			value.erase(value.find_last_not_of("	 ") + 1);
+			if (value==""){break;};
+			switch(structureIndex) {
+					
+				case 0: a.push(value); break;
+				case 1: d.addToTail(value); break;
+				case 2: q.push(value); break;
+				case 3: s.push(value); break;
+				case 4: getline(ss, valuekey, ','); h.insert(valuekey,value); break; //needs key
+				case 5: t.insert(value); break;
+			}
+		}
 
-structureIndex++;
-}
+		structureIndex++;
+	}
 
-file.close();
-cout << "Data loaded from " << filename << "." << endl;
-}
-catch(exception& e){
-	cout<<"ERROR: "<<e.what()<<endl;
-}
+	file.close();
+	cout << "Data loaded from " << filename << "." << endl;
+	}
+	catch(exception& e){
+		cout<<"ERROR: "<<e.what()<<endl;
+	}
 
 }
 
@@ -638,38 +628,34 @@ cout << "Welcome to the Data Structures!" << endl;
 cout<<"7";
 int index;
 string value,command, filename = "data_structures.txt";
-cout << "Available commands: M* (Array), L* (List), Q* (Queue), S* (Stack), H* (Hash Table), T* (Tree), PRINT, SAVE, LOAD, EXIT" << endl;
+cout << "Available commands: M* (Array), L* (List), Q* (Queue), S* (Stack), H* (Hash Table), T* (Tree), PRINT, EXIT" << endl;
 
 string filePath = "";
 string query = "";
 
 
+
   for (int i = 1; i < argc; i++)
-    {
-	cout <<i<<" " << argv[i] <<" ";
-	}
-	cout<<endl;
-  for (int i = 1; i < argc; i++)
-    {
+	{
 	string temp = argv[i];
-      if (temp == "--file"){
-        filePath = argv[i + 1];
-		cout <<i<<" " << argv[i+1] <<" ";
+	  if (temp == "--file"){
+		filePath = argv[i + 1];
+		//cout <<i<<" " << argv[i+1] <<" ";
 	  
-      continue;
-    }
-      else if (temp == "--query")
-    {
-      for (int j = i + 1; j < argc; j++)
-        {
+	  continue;
+	}
+	  else if (temp == "--query")
+	{
+	  for (int j = i + 1; j < argc; j++)
+		{
 			temp = argv[j];
-	cout <<j<<" " << argv[j] <<" ";
-          if (temp == "--file"){
+	//cout <<j<<" " << argv[j] <<" ";
+		  if (temp == "--file"){
 		break;}
-          query += temp + ' ';
+		  query += temp + ' ';
 		}
 		
-    }
+	}
 	}
 
 	cout << "File path: " << filePath << endl;
@@ -681,40 +667,40 @@ if (!query.empty()) {
 
 
 	try{
-cout << "Enter command: ";
+//cout << "Enter command: ";
 //string input;
 //getline(cin, input);
 istringstream isstr(query);
 isstr >> command;
 
 if (command == "MPUSH") {
-if (isstr >> value) {
-arrr.push(value);
-cout << "Element " << value << " added to array." << endl;
-}
+	if (isstr >> value) {
+	arrr.push(value);
+	cout << "Element " << value << " added to array." << endl;
+	}
 }
 
 else if (command == "MSET") {
 
 if (isstr >> index >> value) {
-arrr.set(index,value);
-cout << "Element " << value << " set to array at index " << index << "." << endl;
+	arrr.set(index,value);
+	cout << "Element " << value << " set to array at index " << index << "." << endl;
 }
 }
 
 else if (command == "MDEL") {
 
 if (isstr >> index) {
-arrr.del(index);
-cout << "Element at index " << index << " removed!" << endl;
+	arrr.del(index);
+	cout << "Element at index " << index << " removed!" << endl;
 }
 }
 
 else if (command == "MGET") {
 
 if (isstr >> index) {
-cout << "Got: " << arrr.get(index)<<endl;
-cout << "Element at index " << index << " retrieved." << endl;
+	cout << "Got: " << arrr.get(index)<<endl;
+	cout << "Element at index " << index << " retrieved." << endl;
 }
 }
 
@@ -798,13 +784,12 @@ else if (command == "QPUSH") {
 } 
 
 else if (command == "QPOP") {
-	sq.pop();
-	cout << "Element popped from the queue." << endl;
+	cout << "Element "<< sq.pop() <<" popped from the queue." << endl;
 } 
 
 else if (command == "SPOP") {
 	st.pop();
-	cout << "Element popped from the stack." << endl;
+	cout << "Element"<< st.pop() <<" popped from the stack." << endl;
 } 
 
 else if (command == "HSET") {
@@ -894,8 +879,8 @@ catch(exception& e){
 
 saveToFile(filePath,arrr,dll,sq,st,hsh,cbt);
 }
-catch(...){
-	
+catch(exception& e){
+	cout<<"ERROR: "<<e.what()<<endl;
 }
 
 return 0;
