@@ -16,9 +16,9 @@ using namespace std;
 	};
 
 struct Darr {
-	string* data = new string[capacity];
 	size_t capacity = 10;
 	size_t size = 0;
+	string* data = new string[capacity];
 		
 
 	void push(string value) {
@@ -311,25 +311,25 @@ struct Stack {
 	}
 	
 string save() {
-string s;
-s.clear();
+	string s;
+	s.clear();
 
-if (top == nullptr) {
-s = "";
-return s;
-}
+	if (top == nullptr) {
+		s = "";
+		return s;
+	}
 
-Node* current = top;
-while (current!= nullptr) {
-s = current->value + "," + s;
-current = current->next;
-}
+	Node* current = top;
+	while (current!= nullptr) {
+		s = current->value + "," + s;
+		current = current->next;
+	}
 
-if (!s.empty()) {
-s.pop_back(); // Remove the trailing comma
-}
+	if (!s.empty()) {
+		s.pop_back(); // Remove the trailing comma
+	}
 
-return s;
+	return s;
 }
 
 	
@@ -337,6 +337,146 @@ return s;
 
 ////////////////////
 
+
+struct oncelinkedlist {
+string value = "";
+size_t size;
+oncelinkedlist* next = nullptr;
+
+
+
+void push(const string& newValue) {
+	oncelinkedlist* head = this; 
+	oncelinkedlist* current = this;
+	if (current->size == 0){
+	current->size = 1;
+	current->value = newValue;
+	return;}
+	current = current->get(current->size-1);
+	current->next = new oncelinkedlist();
+	current->next->value = newValue;
+	
+	if (current->next->next){current->next->next = nullptr;}
+	
+	head->size++;
+	current->next->size = head->size;
+	return;
+}
+
+string pop() {
+	if (!this->next) {
+	string poppedValue = this->value;
+	this->size = 0; //probably bad
+	this->value = "";
+	return poppedValue;
+	}
+	oncelinkedlist* current = this;
+	while (current->next->next) {
+	current = current->next;
+	}
+	string poppedValue = current->next->value;
+	//delete current->next;
+	current->next = nullptr;
+	this->size--;
+	return poppedValue;
+}
+
+
+int searchByValue(const string& value) {
+	int i=0;
+	oncelinkedlist* current = this;
+	while (current->next) {
+	i++;
+	if (current->next->value == value) {
+	return i++;
+	}
+	current = current->next;
+	}
+	return -1;
+}
+
+    void deleteByValue(const string& value) {
+    oncelinkedlist* current = this;
+    while (current->next) {
+        if (current->next->value == value) {
+            oncelinkedlist* nodeToDelete = current->next;
+            current->next = nodeToDelete->next;
+            if (nodeToDelete->next) {
+                nodeToDelete->next->size = current->size;
+            }
+            delete nodeToDelete;
+            this->size--;
+            return;
+        }
+        current = current->next;
+    }
+}
+
+oncelinkedlist* get(size_t index) {
+	oncelinkedlist* current = this;
+	if(index==0){return current;}
+
+	if (index>current->size){
+		throw out_of_range("OOB!");
+	}
+
+	for (size_t i = 0; index > i; i++) {
+	if (current->next==nullptr){
+		return current;
+	}
+	current = current->next;
+	}
+	return current; 
+}
+
+
+	void print() {
+		if (this == nullptr) {
+			cout << "No list." << endl;
+			return;
+		}
+		cout << "Printing once linked list:";
+		oncelinkedlist* current = this;
+		while (current != nullptr) {
+				cout << current->value << endl;
+				cout << " -> " ;
+				current = current->next;
+		}
+		cout << "nullptr" << endl;	
+	}
+	
+
+	
+string save() {
+	string s;
+	s.clear();
+
+	if (this == nullptr) {
+		s = "";
+		return s;
+	}
+
+	oncelinkedlist* current = this;
+	while (current!= nullptr) {
+		s = current->value + "," + s;
+		current = current->next;
+	}
+	cout<<s;
+	if (!s.empty()) {
+		
+		s.pop_back();
+		cout<<s;// Remove the trailing comma
+	}
+
+	return s;
+}
+
+
+};
+
+
+
+/////////
 
 struct HashTable {
 	const int HASHSIZE = 10;
@@ -512,26 +652,7 @@ struct CompleteBinaryTree {
 	}
 
 	
-	string getEBI(int index) { //el by index
-	if (index < 1 || index > nodeCount) {
-		return "Invalid index";
-	}
-		return getEBIHelper(root, index, 1);
-	}
-
-	string getEBIHelper(TreeNode* node, int targetIndex, int currentIndex) {
-		if (node == nullptr) {
-			return "Node not found";
-		}
-		if (currentIndex == targetIndex) {
-			return node->data;
-		}
-		if (targetIndex < currentIndex * 2) {
-			return getEBIHelper(node->left, targetIndex, currentIndex * 2);
-		} else {
-			return getEBIHelper(node->right, targetIndex, currentIndex * 2 + 1);
-		}
-	}
+	
 	
 	
 	void print() {
@@ -554,7 +675,7 @@ struct CompleteBinaryTree {
 
 };
 
-void saveToFile(const string& filename, Darr& ar, DoubleLinkedList& dr, Queue& qr, Stack& sr, HashTable& hr, CompleteBinaryTree& tr) {
+void saveToFile(const string& filename, Darr& ar, DoubleLinkedList& dr, Queue& qr, Stack& sr, HashTable& hr, CompleteBinaryTree& tr, oncelinkedlist& o) {
 	remove(filename.c_str());
 	ofstream file(filename, ios::binary);
 	if (!file.is_open()) {
@@ -563,14 +684,14 @@ void saveToFile(const string& filename, Darr& ar, DoubleLinkedList& dr, Queue& q
 	}
 
 	// Darr
-	file << ar.save()<< "\n" <<dr.save()<< "\n" <<qr.save()<< "\n" <<sr.save()<< "\n" <<hr.save()<< "\n" <<tr.save()<< "\n";
+	file << ar.save()<< "\n" <<dr.save()<< "\n" <<qr.save()<< "\n" <<sr.save()<< "\n" <<hr.save()<< "\n" <<tr.save()<< "\n" <<o.save()<< "\n";
 
 	file.close();
 	cout << "\n\nData saved to " << "data.txt" << "." << endl;
 }
 
 
-void loadFromFile(const string& filename, Darr& a, DoubleLinkedList& d, Queue& q, Stack& s, HashTable& h, CompleteBinaryTree& t) {
+void loadFromFile(const string& filename, Darr& a, DoubleLinkedList& d, Queue& q, Stack& s, HashTable& h, CompleteBinaryTree& t, oncelinkedlist& o) {
 	try{
 	ifstream file(filename);
 	string line;
@@ -579,7 +700,7 @@ void loadFromFile(const string& filename, Darr& a, DoubleLinkedList& d, Queue& q
 		cout << "no file..." << endl;
 		return;
 	}
-	while (getline(file, line) && structureIndex < 6) {
+	while (getline(file, line) && structureIndex < 7) {
 		istringstream ss(line);
 		string value;
 		string valuekey;
@@ -593,6 +714,7 @@ void loadFromFile(const string& filename, Darr& a, DoubleLinkedList& d, Queue& q
 					
 				case 0: a.push(value); break;
 				case 1: d.addToTail(value); break;
+				case 6: o.push(value); break;
 				case 2: q.push(value); break;
 				case 3: s.push(value); break;
 				case 4: getline(ss, valuekey, ','); h.insert(valuekey,value); break; //needs key
@@ -607,7 +729,7 @@ void loadFromFile(const string& filename, Darr& a, DoubleLinkedList& d, Queue& q
 	cout << "Data loaded from " << filename << "." << endl;
 	}
 	catch(exception& e){
-		cout<<"ERROR: "<<e.what()<<endl;
+		cout<<"ERROR2: "<<e.what()<<endl;
 	}
 
 }
@@ -618,17 +740,16 @@ cout << "Welcome to the Data Structures!" << endl;
 	/// ////////////////////////////////
 				Darr arrr;
 				DoubleLinkedList dll;
+				oncelinkedlist oll;
 				Queue sq;
 				Stack st;
 				HashTable hsh ;
 				CompleteBinaryTree cbt;
 	/// ///////////////////////////////
-	loadFromFile("data.txt",arrr,dll,sq,st,hsh,cbt);
+	loadFromFile("data.txt",arrr,dll,sq,st,hsh,cbt,oll);
 	
-cout<<"7";
 int index;
 string value,command, filename = "data_structures.txt";
-cout << "Available commands: M* (Array), L* (List), Q* (Queue), S* (Stack), H* (Hash Table), T* (Tree), PRINT, EXIT" << endl;
 
 string filePath = "";
 string query = "";
@@ -725,7 +846,6 @@ if (isstr >> position >> value) {
 }
 }
 
-
 else if (command == "LDEL") {
 	string position;
 	if (isstr >> position) {
@@ -735,14 +855,14 @@ else if (command == "LDEL") {
 			dll.removeFromHead();
 			} else if (position == "tail") {
 			dll.removeFromTail();
+		cout << "Element removed from the " << position << " of the list." << endl;
 			} else {
 				isstr>>value;
 				dll.removeByValue(value);
 				cout << "Element removed from the list." << endl;
-				return 0;
+				
 			}
 
-		cout << "Element removed from the " << position << " of the list." << endl;
 		} else {
 		cout << "Invalid position for LDEL." << endl;
 		}
@@ -750,7 +870,6 @@ else if (command == "LDEL") {
 	cout << "Invalid input for LDEL." << endl;
 	}
 }
-
 
 else if (command == "LGET") {
 	if (isstr >> value) {
@@ -763,6 +882,42 @@ else if (command == "LGET") {
 		cout << "Invalid input for LGET." << endl;
 	}
 } 
+
+else if (command == "OPUSH") {
+
+if (isstr >> value) {
+
+			oll.push(value);
+			
+			
+			// listPush(position == "head", value);
+		cout << "Element " << value << " added to the list." << endl;
+	}  else {
+	cout << "Invalid input for OPUSH. " << endl;
+}
+}
+
+else if (command == "ODEL") {
+	string position;
+	if (isstr >> value) {
+			oll.deleteByValue(value);
+	} else {
+	cout << "Invalid input for ODEL." << endl;
+	}
+}
+
+else if (command == "OGET") {
+	if (isstr >> value) {
+		int result = oll.searchByValue(value);
+		if(result == -1){ cout<<"Couldn't find value"; return 1;} 
+		else {
+			cout<< "Found at "<< (result-1);
+		}
+	} else {
+		cout << "Invalid input for OGET." << endl;
+	}
+} 
+
 
 else if (command ==  "SPUSH"){
 	if (isstr >> value) {
@@ -852,6 +1007,7 @@ else if (command == "TCHECK") {
 else if (command == "PRINT") {
 	arrr.print();
 	dll.print();
+	oll.print();
 	sq.print();
 	st.print();
 	hsh.print();
@@ -877,7 +1033,7 @@ catch(exception& e){
 
 
 
-saveToFile(filePath,arrr,dll,sq,st,hsh,cbt);
+saveToFile(filePath,arrr,dll,sq,st,hsh,cbt,oll);
 }
 catch(exception& e){
 	cout<<"ERROR: "<<e.what()<<endl;
